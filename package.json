@@ -10,10 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/jsguysnet/book-bakery.git"
   },
-  "author": "Manuel Schächinger <schaechinger@jsguys.net>",
+  "author": "Manuel Schächinger <schaechinger@jsguys.net>; Maik Paulus <paulus@jsguys.net>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jsguysnet/book-bakery/issues"
   },
-  "homepage": "https://github.com/jsguysnet/book-bakery#readme"
+  "homepage": "https://github.com/jsguysnet/book-bakery#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0"
+  }
 }
