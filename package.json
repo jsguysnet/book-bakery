@@ -1,0 +1,19 @@
+{
+  "name": "book-bakery",
+  "version": "1.0.0",
+  "description": "book bakery yummie",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsguysnet/book-bakery.git"
+  },
+  "author": "Manuel Schächinger <schaechinger@jsguys.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsguysnet/book-bakery/issues"
+  },
+  "homepage": "https://github.com/jsguysnet/book-bakery#readme"
+}
