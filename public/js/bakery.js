@@ -73,9 +73,11 @@ var Overview = React.createClass({
 
         var books = [];
 
-        self.state.books.forEach(function (book) {
-            books.push(<Book data={book} />);
-        });
+        for (var isbn in self.state.books) {
+            if (self.state.books.hasOwnProperty(isbn)) {
+                books.push(<Book data={self.state.books[isbn]} isbn={isbn} />);
+            }
+        }
 
         return (
             <div className="book-list">
@@ -87,7 +89,7 @@ var Overview = React.createClass({
 
     getInitialState: function () {
         return {
-            books: []
+            books: {}
         };
     },
 
