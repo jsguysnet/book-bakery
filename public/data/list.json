@@ -1,0 +1,18 @@
+[
+    {
+        "author": "Autor",
+        "title": "Buch 1",
+        "genre": "Teenie",
+        "year": 2016,
+        "edition": 1,
+        "isbn": "DE-678-234324-343-1"
+    },
+    {
+        "author": "Autor",
+        "title": "Buch 2",
+        "genre": "Opa",
+        "year": 2015,
+        "edition": 3,
+        "isbn": "DE-678-234324-343-1"
+    },
+]
