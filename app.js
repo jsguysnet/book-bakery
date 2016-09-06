@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get('/list', function (request, response) {
     let bookery = new Bookery(__dirname + '/books');
     bookery.list(function (data) {
-        response.send(data);
+        response.send([data]);
     });
 });
 
