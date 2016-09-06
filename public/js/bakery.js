@@ -69,24 +69,56 @@ var Details = React.createClass({
 
 var Overview = React.createClass({
     render: function () {
+        var self = this;
+
+        var books = [];
+
+        self.state.books.forEach(function (book) {
+            books.push(<Book data={book} />);
+        });
+
         return (
-            <h1>Book Bakery</h1>
+            <div className="book-list">
+                <h1>Book Bakery</h1>
+                {books}
+            </div>
         );
     },
 
     getInitialState: function () {
-        return {};
+        return {
+            books: []
+        };
     },
 
     componentDidMount: function () {
-        $.ajax('data/list.json', {
+        var self = this;
+
+        $.ajax('/list', {
             method: 'get',
             success: function (response) {
-                console.log(response);
+                self.setState({
+                    books: response
+                });
+            },
+            failure: function () {
+                console.log('error');
             }
         });
     }
 });
+
+var Book = React.createClass({
+    render: function () {
+        return (
+            <div className="book">
+                <h3>{this.props.data.title}</h3>
+                <span className="author">{this.props.data.author}</span>
+                <span className="version">{this.props.data.year}, Auflage {this.props.data.edition}</span>
+            </div>
+        );
+    }
+})
 
 ReactDOM.render(
     <Page/>,

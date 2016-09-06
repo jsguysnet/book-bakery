@@ -7,15 +7,15 @@ let Crawler = require(__dirname + '/lib/Crawler.js');
 let app = express();
 let port = 2016;
 
+app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 // route to get a list of all books
 app.get('/list', function (request, response) {
     let crawler = new Crawler(__dirname + '/books');
-    response.send({
-        test: 123
-    });
+    response.setHeader('Content-Type', 'application/json');
+    response.send(require(__dirname + '/data/list.json'));
 });
 
 // route to get book details
@@ -36,7 +36,7 @@ app.get('/list/:query', function (request, response) {
 
 // route to catch every other call
 app.get('*', function (request, response) {
-    response.sendFile('public/index.html');
+    response.sendFile(__dirname + '/public/index.html');
 });
 
 // standard express call to start the webserver
