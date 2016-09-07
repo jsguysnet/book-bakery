@@ -15,25 +15,26 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get('/list', function (request, response) {
     let bookery = new Bookery(__dirname + '/books');
     bookery.list(function (data) {
-        response.send([data]);
+        response.json(data);
     });
 });
 
 // route to get book details
-app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (request, response) {
-    console.log(request.params);
-    response.send({
-        test: 123
+app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (request, response, next) {
+    let bookery = new Bookery(__dirname + '/books');
+    let isbn = request.params.isbn;
+    bookery.getDetails(isbn, function (data) {
+        response.json(data);
     });
 });
 
 // route to catch a filter on the list
-app.get('/list/:query', function (request, response) {
+/*app.get('/list/:query', function (request, response) {
     console.log(request.params);
     response.send({
         test: 123
     });
-});
+}); */
 
 // route to catch every other call
 app.get('*', function (request, response) {
