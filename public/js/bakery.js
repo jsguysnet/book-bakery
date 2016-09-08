@@ -5,16 +5,28 @@ var Page = React.createClass({
             hash = hash.substr(1);
         }
 
+        var parameters = {};
+        var search = window.location.search;
+        if (search) {
+            search = search.substr(1).split('&');
+            search.forEach(function (param) {
+                param = param.split('=');
+                if (2 === param.length) {
+                    parameters[param[0]] = param[1];
+                }
+            });
+        }
+
         switch (hash) {
             case 'upload':
-                return <Upload/>;
+                return <Upload parameters={parameters}/>;
 
             case 'details':
-                return <Details/>;
+                return <Details parameters={parameters}/>;
 
             case 'overview':
             default:
-                return <Overview/>;
+                return <Overview parameters={parameters}/>;
         }
     }
 });
@@ -61,9 +73,29 @@ var InputField = React.createClass({
 
 var Details = React.createClass({
     render: function () {
+        if (!this.props.parameters.isbn) {
+            window.location = '/';
+        }
+
         return (
-            <h1>Book details</h1>
+            <div>
+                <h1>{this.state.title}</h1>
+                {this.props.parameters.isbn}
+            </div>
         );
+    },
+    getInitialState: function () {
+        return {
+            title: 'Buchdetails'
+        };
+    },
+    componentDidMount: function () {
+        $.ajax('/list/' + this.props.parameters.isbn, {
+            method: 'get',
+            success: function (response) {
+                console.log(response);
+            }
+        });
     }
 });
 
@@ -80,10 +112,10 @@ var Overview = React.createClass({
         }
 
         return (
-            <div className="book-list">
+            <ul className="book-list">
                 <h1>Book Bakery</h1>
                 {books}
-            </div>
+            </ul>
         );
     },
 
@@ -113,11 +145,14 @@ var Overview = React.createClass({
 var Book = React.createClass({
     render: function () {
         return (
-            <div className="book">
+            <li className="book">
                 <h3>{this.props.data.title}</h3>
                 <span className="author">{this.props.data.author}</span>
                 <span className="version">{this.props.data.year}, Auflage {this.props.data.edition}</span>
-            </div>
+                <a href={'/?isbn=' + this.props.isbn + '#details'}>
+                    <i className="right fa-icon fa-chevron-right">&gt;</i>
+                </a>
+            </li>
         );
     }
 })

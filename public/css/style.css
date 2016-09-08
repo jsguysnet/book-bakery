@@ -1,0 +1,21 @@
+body {
+  font: 1em helvetica, arial, verdana;
+}
+
+ul.book-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.book-list li.book {
+  background-color: #fafafa;
+  border: 1px solid #e0e0e0;
+  margin: 0.5em 0;
+  padding: 0.5em;
+}
+
+ul.book-list li.book h3 {
+  margin: 0;
+  padding: 0 0 0.5em;
+}

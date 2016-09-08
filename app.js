@@ -23,7 +23,13 @@ app.get('/list', function (request, response) {
 app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (request, response) {
     console.log(request.params);
     response.send({
-        test: 123
+        isbn: {
+            author: 'Ed 2',
+            title: 'book details title',
+            genre: 'Magazine',
+            year: 2016,
+            edition: 1
+        }
     });
 });
 
