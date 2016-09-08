@@ -21,15 +21,20 @@ app.get('/list', function (request, response) {
 
 // route to get book details
 app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (request, response) {
-    console.log(request.params);
-    response.send({
-        isbn: {
-            author: 'Ed 2',
-            title: 'book details title',
-            genre: 'Magazine',
-            year: 2016,
-            edition: 1
-        }
+    let bookery = new Bookery(__dirname + '/books');
+    let isbn = request.params.isbn;
+    bookery.getDetails(isbn, function (data) {
+        response.json(data);
+    });
+});
+
+// route to get book details
+app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])/pdf$', function (request, response) {
+    let bookery = new Bookery(__dirname + '/books');
+    let isbn = request.params.isbn;
+    bookery.download(isbn, function (data) {
+        response.contentType('application/pdf');
+        response.send(Buffer.concat(data));
     });
 });
 
