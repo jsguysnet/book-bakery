@@ -34,12 +34,12 @@ app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (r
 });
 
 // route to catch a filter on the list
-app.get('/list/:query', function (request, response) {
+/*app.get('/list/:query', function (request, response) {
     console.log(request.params);
     response.send({
         test: 123
     });
-});
+}); */
 
 // route to catch every other call
 app.get('*', function (request, response) {
