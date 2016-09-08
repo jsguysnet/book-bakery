@@ -41,15 +41,9 @@ app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])/pdf$', functio
 app.post('/upload', function (request, response) {
     let bookery = new Bookery(__dirname + '/books');
 
-    request.params = {
-        file: 'tmp/upload.pdf',
-        isbn: '978-2-345-85423-1',
-        title: "jogging joghurt",
-        year: 2015,
-        genre: "sports",
-        author: 'Eddie',
-        edition: 5
-    };
+    console.log(request.body);
+
+    console.log(request);
 
     bookery.upload(request.params, function (data) {
         response.json(data);
