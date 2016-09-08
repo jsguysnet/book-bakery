@@ -2,20 +2,74 @@ body {
   font: 1em helvetica, arial, verdana;
 }
 
-ul.book-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+div.relative {
+  position: relative;
 }
 
-ul.book-list li.book {
+a > i.fa {
+  color: #606060;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a.add-book {
+  display: inline-block;
+  font-size: 1.5em;
+  position: absolute;
+  right: 1rem;
+  top: calc(50% - 0.5em);
+}
+
+.list-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.75em;
+  padding-top: 0.75em;
+  position: relative;
+}
+
+.list-item:last-child {
+  border-bottom-width: 0;
+}
+
+.book-list .book:hover {
   background-color: #fafafa;
-  border: 1px solid #e0e0e0;
-  margin: 0.5em 0;
-  padding: 0.5em;
 }
 
-ul.book-list li.book h3 {
+.book-list .book h3 {
   margin: 0;
   padding: 0 0 0.5em;
+}
+
+.book-list .book span + span::before {
+  color: #f0f0f0;
+  content: '|';
+  padding: 0 0.5em;
+}
+
+.book-list .book i.fa-chevron-right {
+  position: absolute;
+  right: 1em;
+  top: calc(50% - 0.5em);
+}
+
+.input-field {
+  padding: 0.25em 0;
+}
+
+.input-field.required label:after {
+  color: #f00;
+  content: '*';
+  padding-left: 0.25em;
+}
+
+.input-field input:not([type='submit']) {
+  padding: 0.25em 0.5em;
+  width: 100%;
+}
+
+.input-field input[type='file'] {
+  padding-left: 0;
+  padding-right: 0;
 }

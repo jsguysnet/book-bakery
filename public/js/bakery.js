@@ -35,13 +35,15 @@ var Upload = React.createClass({
     render: function () {
         return (
             <div>
-                <h1>Neues Buch hinzufügen</h1>
+                <div className="columns small-12">
+                    <h1>Neues Buch hinzufügen</h1>
+                </div>
 
-                <form action="#upload" method="POST">
+                <form action="/upload" method="POST">
                     <InputField type="text" label="Titel" name="title" />
                     <InputField type="text" label="Autor" name="author" />
                     <InputField type="number" label="Jahr" name="year" />
-                    <InputField type="number" label="Auflage" name="edition" />
+                    <InputField type="number" label="Auflage" name="edition" required={false}/>
                     <InputField type="text" label="ISBN" name="isbn" />
                     <InputField type="text" label="Genre" name="genre" />
                     <InputField type="file" label="PDF" name="file" />
@@ -56,6 +58,10 @@ var InputField = React.createClass({
     render: function () {
         var type = this.props.type || 'text';
         var name = this.props.name;
+        var classNames = 'input-field clearfix';
+        if (this.props.required || undefined === this.props.required) {
+            classNames += ' required';
+        }
 
         var label = this.props.label;
         if (label) {
@@ -63,9 +69,13 @@ var InputField = React.createClass({
         }
 
         return (
-            <div className="input-field">
-                {label}
-                <input type={type} name={name} id={name} />
+            <div className={classNames}>
+                <div className="columns small-12 medium-3">
+                    {label}
+                </div>
+                <div className="columns small-12 medium-6 medium-pull-3">
+                    <input type={type} name={name} id={name} />
+                </div>
             </div>
         );
     }
@@ -77,27 +87,84 @@ var Details = React.createClass({
             window.location = '/';
         }
 
+        var details = [];
+
+        if (this.state.error) {
+            details.push(
+                <DetailItem label="Fehler" value="Das Buch wurde nicht gefunden"/>
+            );
+        }
+        else if (this.state.isbn) {
+            var link = <a href={'/list/' + this.props.parameters.isbn + '/pdf'} target="_blank">
+                        <i className="fa fa-download" /></a>;
+
+            details.push(
+                <DetailItem label="Autor" value={this.state.author}/>,
+                <DetailItem label="Ausgabe" value={this.state.year + ' - Auflage ' + this.state.edition}/>,
+                <DetailItem label="Genre" value={this.state.genre}/>,
+                <DetailItem label="ISBN" value={this.state.isbn}/>,
+                <DetailItem label="Download" value={link}/>
+            );
+        }
+
         return (
-            <div>
-                <h1>{this.state.title}</h1>
-                {this.props.parameters.isbn}
+            <div className="details">
+                <div className="clearfix">
+                    <div className="columns small-12">
+                        <h1>{this.state.title}</h1>
+                    </div>
+                </div>
+                {details}
             </div>
         );
     },
+
     getInitialState: function () {
         return {
-            title: 'Buchdetails'
+            title: 'Buchdetails werden geladen'
         };
     },
+
     componentDidMount: function () {
-        $.ajax('/list/' + this.props.parameters.isbn, {
+        var self = this;
+
+        $.ajax('/list/' + self.props.parameters.isbn, {
             method: 'get',
             success: function (response) {
-                console.log(response);
+                if (response.isbn) {
+                    var book = response.isbn;
+                    book.isbn = self.props.parameters.isbn;
+
+                    self.setState(book);
+                }
+                else {
+                    self.setState({
+                        error: true
+                    });
+                }
             }
         });
     }
 });
+
+var DetailItem = React.createClass({
+    render: function () {
+        if (this.props.value) {
+            return (
+                <div className="detail-item list-item clearfix">
+                    <div className="columns small-12 medium-3">
+                        <strong>{this.props.label}</strong>
+                    </div>
+                    <div className="columns small-12 medium-9">
+                        {this.props.value}
+                    </div>
+                </div>
+            );
+        }
+
+        return null;
+    }
+})
 
 var Overview = React.createClass({
     render: function () {
@@ -112,10 +179,17 @@ var Overview = React.createClass({
         }
 
         return (
-            <ul className="book-list">
-                <h1>Book Bakery</h1>
-                {books}
-            </ul>
+            <div>
+                <div className="relative clearfix">
+                    <h1>Book Bakery</h1>
+                    <a href="/#upload" className="add-book" title="Buch hinzufügen">
+                        <i className="fa fa-plus right" />
+                    </a>
+                </div>
+                <div className="book-list">
+                    {books}
+                </div>
+            </div>
         );
     },
 
@@ -145,14 +219,14 @@ var Overview = React.createClass({
 var Book = React.createClass({
     render: function () {
         return (
-            <li className="book">
+            <div className="columns small-12 book list-item">
                 <h3>{this.props.data.title}</h3>
                 <span className="author">{this.props.data.author}</span>
                 <span className="version">{this.props.data.year}, Auflage {this.props.data.edition}</span>
                 <a href={'/?isbn=' + this.props.isbn + '#details'}>
-                    <i className="right fa-icon fa-chevron-right">&gt;</i>
+                    <i className="right fa fa-chevron-right"></i>
                 </a>
-            </li>
+            </div>
         );
     }
 })
