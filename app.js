@@ -70,6 +70,6 @@ app.get('*', function (request, response) {
 });
 
 // standard express call to start the webserver
-app.listen(port, () => {
+app.listen(port, function () {
     console.log('listening on port ' + port);
 });
