@@ -55,7 +55,17 @@ a.add-book {
 }
 
 .input-field {
-  padding: 0.25em 0;
+  padding: 0.125em 0;
+}
+
+.input-field input,
+.input-field label {
+  display: inline-block;
+  margin: 0.125em 0;
+}
+
+.input-field label {
+  padding-top: 0.125em;
 }
 
 .input-field.required label:after {

@@ -42,8 +42,8 @@ var Upload = React.createClass({
                 <form action="/upload" method="POST">
                     <InputField type="text" label="Titel" name="title" />
                     <InputField type="text" label="Autor" name="author" />
-                    <InputField type="number" label="Jahr" name="year" />
-                    <InputField type="number" label="Auflage" name="edition" required={false}/>
+                    <InputField type="number" label="Erscheinungsjahr" name="year" />
+                    <InputField type="number" label="Auflage" name="edition"/>
                     <InputField type="text" label="ISBN" name="isbn" />
                     <InputField type="text" label="Genre" name="genre" />
                     <InputField type="file" label="PDF" name="file" />
@@ -178,10 +178,16 @@ var Overview = React.createClass({
             }
         }
 
+        if (0 === books.length) {
+            books = <p>Keine Bücher vorhanden</p>;
+        }
+
         return (
             <div>
                 <div className="relative clearfix">
-                    <h1>Book Bakery</h1>
+                    <div className="columns small-12">
+                        <h1>Book Bakery</h1>
+                    </div>
                     <a href="/#upload" className="add-book" title="Buch hinzufügen">
                         <i className="fa fa-plus right" />
                     </a>
