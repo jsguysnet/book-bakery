@@ -59,7 +59,7 @@ var InputField = React.createClass({
         var type = this.props.type || 'text';
         var name = this.props.name;
         var classNames = 'input-field clearfix';
-        if (this.props.required || undefined === this.props.required) {
+        if (!!this.props.required) {
             classNames += ' required';
         }
 
@@ -182,8 +182,17 @@ var Overview = React.createClass({
             }
         }
 
-        if (0 === books.length) {
-            books = <p>Keine Bücher vorhanden</p>;
+
+        var message = null;
+        if (!self.state.loaded) {
+            message = 'Bücher werden gebacken ...';
+        }
+        else if (0 === books.length) {
+            message = books = 'Keine Bücher vorhanden';
+        }
+
+        if (message) {
+            books = <div className="columns small-12"><p>{message}</p></div>;
         }
 
         return (
@@ -192,8 +201,8 @@ var Overview = React.createClass({
                     <div className="columns small-12">
                         <h1>Book Bakery</h1>
                     </div>
-                    <a href="/#upload" className="add-book" title="Buch hinzufügen">
-                        <i className="fa fa-plus right" />
+                    <a onClick={this.addBook} className="add-book" title="Buch hinzufügen">
+                        <i className="fa fa-plus right"/>
                     </a>
                 </div>
                 <div className="book-list">
@@ -205,7 +214,8 @@ var Overview = React.createClass({
 
     getInitialState: function () {
         return {
-            books: {}
+            books: {},
+            loaded: false
         };
     },
 
@@ -216,13 +226,18 @@ var Overview = React.createClass({
             method: 'get',
             success: function (response) {
                 self.setState({
-                    books: response
+                    books: response,
+                    loaded: true
                 });
             },
             failure: function () {
                 console.log('error');
             }
         });
+    },
+
+    addBook: function () {
+        changePage('/#upload');
     }
 });
 
@@ -233,15 +248,35 @@ var Book = React.createClass({
                 <h3>{this.props.data.title}</h3>
                 <span className="author">{this.props.data.author}</span>
                 <span className="version">{this.props.data.year}, Auflage {this.props.data.edition}</span>
-                <a href={'/?isbn=' + this.props.isbn + '#details'}>
+                <a onClick={this.clickBook}>
                     <i className="right fa fa-chevron-right"></i>
                 </a>
             </div>
         );
-    }
-})
+    },
 
-ReactDOM.render(
-    <Page/>,
-    document.getElementById('app')
-);
+    clickBook: function () {
+        changePage('/?isbn=' + this.props.isbn + '#details');
+    }
+});
+
+function render() {
+    ReactDOM.render(
+        <Page/>,
+        document.getElementById('app')
+    );
+}
+
+window.onpopstate = function () {
+    render();
+};
+window.onpushstate = function () {
+    render();
+};
+
+render();
+
+function changePage(url) {
+    window.history.pushState({}, null, url);
+    render();
+}
