@@ -83,7 +83,9 @@ var InputField = React.createClass({
 
 var Details = React.createClass({
     render: function () {
-        if (!this.props.parameters.isbn) {
+        var isbn = this.props.parameters.isbn;
+
+        if (!isbn) {
             window.location = '/';
         }
 
@@ -91,7 +93,7 @@ var Details = React.createClass({
 
         if (this.state.error) {
             details.push(
-                <DetailItem label="Fehler" value="Das Buch wurde nicht gefunden"/>
+                <DetailItem label="Fehler" value={'Das Buch mit der ISBN ' + isbn + ' wurde nicht gefunden'}/>
             );
         }
         else if (this.state.isbn) {
@@ -128,12 +130,14 @@ var Details = React.createClass({
     componentDidMount: function () {
         var self = this;
 
-        $.ajax('/list/' + self.props.parameters.isbn, {
+        var isbn = self.props.parameters.isbn;
+
+        $.ajax('/list/' + isbn, {
             method: 'get',
             success: function (response) {
-                if (response.isbn) {
-                    var book = response.isbn;
-                    book.isbn = self.props.parameters.isbn;
+                if (response.hasOwnProperty(isbn)) {
+                    var book = response[isbn];
+                    book.isbn = isbn;
 
                     self.setState(book);
                 }
