@@ -21,8 +21,14 @@ var Page = React.createClass({
             case 'upload':
                 return <Upload parameters={parameters}/>;
 
+            case 'failed':
+                return <Upload parameters={parameters} message="Das Buch konnte nicht angelegt werden."/>;
+
             case 'details':
                 return <Details parameters={parameters}/>;
+
+            case 'success':
+                return <Overview parameters={parameters} message="Das Buch wurde angelegt."/>;
 
             case 'overview':
             default:
@@ -39,7 +45,9 @@ var Upload = React.createClass({
                     <h1>Neues Buch hinzufügen</h1>
                 </div>
 
-                <form action="/upload" method="POST">
+                <Alert message={this.props.message}/>
+
+                <form action="/upload" method="POST" encType="multipart/form-data">
                     <InputField type="text" label="Titel" name="title" />
                     <InputField type="text" label="Autor" name="author" />
                     <InputField type="number" label="Erscheinungsjahr" name="year" />
@@ -182,7 +190,6 @@ var Overview = React.createClass({
             }
         }
 
-
         var message = null;
         if (!self.state.loaded) {
             message = 'Bücher werden gebacken ...';
@@ -205,6 +212,9 @@ var Overview = React.createClass({
                         <i className="fa fa-plus right"/>
                     </a>
                 </div>
+                
+                <Alert message={this.props.message}/>
+
                 <div className="book-list">
                     {books}
                 </div>
@@ -259,6 +269,19 @@ var Book = React.createClass({
         changePage('/?isbn=' + this.props.isbn + '#details');
     }
 });
+
+var Alert = React.createClass({
+    render: function () {
+        var message = this.props.message || null;
+
+        if (message) {
+            message = <div className="columns small-12 alert">
+                <p>{message}</p></div>;
+        }
+
+        return message;
+    }
+})
 
 function render() {
     ReactDOM.render(

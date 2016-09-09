@@ -1,6 +1,8 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let path = require('path');
+var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' });
 
 let Bookery = require(__dirname + '/lib/Bookery.js');
 
@@ -32,31 +34,21 @@ app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])$', function (r
 app.get('^/list/:isbn([0-9]{3}\-[0-9]\-[0-9]{3}\-[0-9]{5}\-[0-9])/pdf$', function (request, response) {
     let bookery = new Bookery(__dirname + '/books');
     let isbn = request.params.isbn;
+    
     bookery.download(isbn, function (data) {
         response.contentType('application/pdf');
         response.send(Buffer.concat(data));
     });
 });
 
-app.post('/upload', function (request, response) {
+app.post('/upload', upload.single('file'), function (request, response) {
     let bookery = new Bookery(__dirname + '/books');
 
-    console.log(request.body);
-
-    console.log(request);
-
-    bookery.upload(request.params, function (data) {
-        response.json(data);
+    request.body.file = request.file.path;
+    bookery.upload(request.body, function (data) {
+        response.redirect('/#' + (data.success ? 'success' : 'failed'));
     });
 });
-
-// route to catch a filter on the list
-/*app.get('/list/:query', function (request, response) {
-    console.log(request.params);
-    response.send({
-        test: 123
-    });
-}); */
 
 // route to catch every other call
 app.get('*', function (request, response) {
